@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{98A26A2B-3901-4615-A91B-B241C996E70B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>HandbrakeMod</RootNamespace>
+    <AssemblyName>HandbrakeMod</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="cInput">
+      <HintPath>F:\SteamLibrary\steamapps\common\My Summer Car\mysummercar_Data\Managed\cInput.dll</HintPath>
+    </Reference>
+    <Reference Include="MSCLoader">
+      <HintPath>F:\SteamLibrary\steamapps\common\My Summer Car\mysummercar_Data\Managed\MSCLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath>F:\SteamLibrary\steamapps\common\My Summer Car\mysummercar_Data\Managed\PlayMaker.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>F:\SteamLibrary\steamapps\common\My Summer Car\mysummercar_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HandbrakeFunc.cs" />
+    <Compile Include="HandbrakeMod.cs" />
+    <Compile Include="ParkbrakeFunc.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <MSC_DIR>F:\SteamLibrary\steamapps\common\My Summer Car\Mods</MSC_DIR>
+    <MWC_DIR>NONE</MWC_DIR>
+    <PostBuildEvent>
+			IF "$(MSC_DIR)" == "" (
+			GOTO mwc
+			)
+			IF "$(MSC_DIR)" == "NONE" (
+			GOTO mwc
+			)
+			IF NOT EXIST "$(MSC_DIR)" (
+			ECHO Error. mods dir not found. update MSC_DIR Property in .csproj file.
+			GOTO mwc
+			)
+
+			ECHO $(ProjectName) -^&gt; $(MSC_DIR)\$(TargetName).dll
+			COPY "$(TargetPath)" "$(MSC_DIR)" /y &gt;nul
+
+			IF /i "$(ConfigurationName)" == "debug" (
+			GOTO msc_dbg
+			)
+			IF /i "$(ConfigurationName)" == "upd_ver_debug" (
+			GOTO msc_dbg
+			)
+
+			GOTO mwc
+
+			:msc_dbg
+			IF EXIST "$(MSC_DIR)\debug.bat" (
+			ECHO $(ProjectName) -^&gt; $(MSC_DIR)\$(TargetName).pdb
+			COPY "$(TargetDir)$(TargetName).pdb" "$(MSC_DIR)" &gt;nul
+			CD "$(MSC_DIR)"
+			CALL "$(MSC_DIR)\debug.bat"
+			DEL "$(MSC_DIR)\$(TargetName).pdb" /q &gt;nul
+			) ELSE (
+			ECHO Error. $(MSC_DIR)\debug.bat not found. Are you in Debug mode?
+			)
+
+			:mwc
+			IF "$(MWC_DIR)" == "" (
+			GOTO done
+			)
+			IF "$(MWC_DIR)" == "NONE" (
+			GOTO done
+			)
+			IF NOT EXIST "$(MWC_DIR)" (
+			ECHO Error. mwc mods dir not found. update MWC_DIR Property in .csproj file.
+			GOTO done
+			)
+
+			ECHO $(ProjectName) -^&gt; $(MWC_DIR)\$(TargetName).dll
+			COPY "$(TargetPath)" "$(MWC_DIR)" /y &gt;nul
+
+			IF /i "$(ConfigurationName)" == "debug" (
+			GOTO mwc_dbg
+			)
+			IF /i "$(ConfigurationName)" == "upd_ver_debug" (
+			GOTO mwc_dbg
+			)
+
+			GOTO done
+
+			:mwc_dbg
+			IF EXIST "$(MWC_DIR)\debug.bat" (
+			ECHO $(ProjectName) -^&gt; $(MWC_DIR)\$(TargetName).pdb
+			COPY "$(TargetName).pdb" "$(MWC_DIR)" &gt;nul
+			CD "$(MWC_DIR)"
+			CALL "$(MWC_DIR)\debug.bat"
+			DEL "$(MWC_DIR)\$(TargetName).pdb" /q &gt;nul
+			) ELSE (
+			ECHO Error. $(MWC_DIR)\debug.bat not found. Are you in Debug mode?
+			)
+
+			:done
+			EXIT /b 0
+		</PostBuildEvent>
+  </PropertyGroup>
+</Project>
