@@ -47,13 +47,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <AppDesigner Include="Properties\" />
+    <AppDesigner Include="HandbrakeMod\Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HandbrakeFunc.cs" />
-    <Compile Include="HandbrakeMod.cs" />
-    <Compile Include="ParkbrakeFunc.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="HandbrakeMod\HandbrakeMod.cs" />
+    <Compile Include="HandbrakeMod\HandbrakeFunc.cs" />
+    <Compile Include="HandbrakeMod\ParkbrakeFunc.cs" />
+    <Compile Include="HandbrakeMod\Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
